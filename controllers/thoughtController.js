@@ -25,26 +25,11 @@ module.exports = {
     }
   },
   // create a new thought
-  async createThought(req, res) {
-    try {
-      const thought = await Thought.create(req.body);
-      const user = await User.findOneAndUpdate(
-          { _id: req.body.userId },
-          { $addToSet: { posts: post._id } },
-          { new: true }
-      );
+  createThought(req, res) {
+    Thought.create(req.body)
+      .then((thought) => res.json(thought))
+      .catch((err) => res.status(500).json(err));
 
-      if (!user) {
-        return res
-            .status(404)
-            .json({ message: 'Thought created, but found no user with that ID' });
-      }
-
-      res.json('Created the thought 🎉');
-    } catch (err) {
-      console.log(err);
-      res.status(500).json(err);
-    }
   },
   // Updates a thought using the findOneAndUpdate method. Uses the ID, and the $set operator in mongodb to inject the request body. Enforces validation.
   async updateThought(req, res) {

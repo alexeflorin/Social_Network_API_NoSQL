@@ -2,38 +2,40 @@ const { Schema, model, Types } = require('mongoose');
 
 const { DateTime } = require("luxon");
 
-const ReactionSchema = new Schema({
-    reactionId: {
-        type: Schema.Types.ObjectId,
-        // Use Mongoose's ObjectId data type
-        default: new Types.ObjectId(),
-        // Default value is set to a new ObjectId
+const ReactionSchema = new Schema(
+    {
+        reactionId: {
+            type: Schema.Types.ObjectId,
+            // Use Mongoose's ObjectId data type
+            default: new Types.ObjectId(),
+            // Default value is set to a new ObjectId
+        },
+        reactionBody: {
+            type: String,
+            required: true,
+            maxlength: 280,
+            // max length of 280 characters
+        },
+        username: {
+            type: String,
+            required: true,
+            // username is required
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+            get: createdAtVal => createdAtVal.toDateString(),
+            // date and time of when the reaction was created
+        },
     },
-    reactionBody: {
-        type: String,
-        required: true,
-        maxlength: 280,
-        // max length of 280 characters
-    },
-    username: {
-        type: String,
-        required: true,
-        // username is required
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now,
-        get: createdAtVal => createdAtVal.toDateString(),
-        // date and time of when the reaction was created
-    },
+    {
+        toJSON: {
+            virtuals: true,
+            getters: true,
+        },
+        id: false
 
-    toJSON: {
-        virtuals: true,
-        getters: true,
-    },
-    id: false
-
-});
+    });
 
 
 const ThoughtSchema = new Schema(
@@ -69,7 +71,7 @@ const ThoughtSchema = new Schema(
 );
 
 
-userSchema.virtual('reactionCount').get(function () {
+ThoughtSchema.virtual('reactionCount').get(function () {
     return this.reactions.length;
 });
 

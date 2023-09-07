@@ -84,7 +84,7 @@ module.exports = {
     } catch (err) {
       res.status(500).json(err);
     }
-  }
+  },
 
 //    delete a friend
   async removeFriend(req, res) {
